@@ -6,6 +6,8 @@ import plotly.figure_factory as ff
 import plotly.express as px
 import io
 import time
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 def download_data():
     # Niks aan veranderen standaard waardes
@@ -54,8 +56,6 @@ def line_chart(data2):
          'Eindhoven NB', 'Volkel NB', 'Maastricht LI']]
     Schiphol_Leeuwarden['Dates'] = pd.to_datetime(Schiphol_Leeuwarden['Datum'], format='%Y%m%d')
 
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
