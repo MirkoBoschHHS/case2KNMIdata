@@ -294,6 +294,95 @@ def line_chart(data2):
     fig.update_layout(title_x=0.5)
     return fig
 
+def boxplot(data_clean):
+    fig = px.box(data_frame=data_clean,
+                 x='Gemiddelde',
+                 hover_data=[data_clean.index.date, data_clean['Standaarddeviatie']],
+                 labels={'Gemiddelde': 'Gemiddelde temperatuur in °C', 'hover_data_0': 'Datum'},
+                 orientation='h',
+                 height=300,
+                 width=950,
+                 color_discrete_sequence=px.colors.qualitative.Dark2)
+
+    fig.update_layout(title="Boxplot gemiddelde temperatuur van weerstations in Nederland 1981-2010", title_x=0.5)
+
+    # fig.show()
+    return fig
+
+def boxplot2(data_clean):
+    fig = px.box(data_frame=data_clean,
+                 x='Standaarddeviatie',
+                 hover_data=[data_clean.index.date, data_clean['Gemiddelde']],
+                 labels={'Standaarddeviatie': 'Standaarddeviatie gemiddelde temperatuur in °C',
+                         'hover_data_0': 'Datum'},
+                 orientation='h',
+                 height=300,
+                 width=950,
+                 color_discrete_sequence=px.colors.qualitative.Bold)
+
+    fig.update_layout(title="Boxplot standaarddeviatie gemiddelde temperatuur van weerstations in Nederland 1981-2010",
+                      title_x=0.5)
+
+    # fig.show()
+    return fig
+
+def scatter(data_clean):
+    # We kunnen ook de gemiddelde temperatuur per maand berekenen en daar een plot van maken
+
+    gem_temp = pd.DataFrame(columns=['Gemiddelde'], index=range(0, 360))
+
+    k = 0
+    for i in range(1981, 2011):
+        for j in range(1, 13):
+            gem_temp.iloc[k, 0] = (
+                round(data_clean[(data_clean.index.month == j) & (data_clean.index.year == i)]['Gemiddelde'].mean(), 1))
+            k += 1
+
+    # Dit zorgt voor de juiste getallen bij de x-as
+
+    k = 0
+    for i in range(1981, 2011):
+        for j in range(0, 12):
+            gem_temp.loc[k, 'Tijd'] = i + j / 12
+            k += 1
+
+    # Jaartal om te laten zien bij het hoveren
+
+    k = 0
+    for i in range(1981, 2011):
+        for j in range(0, 12):
+            gem_temp.loc[k, 'Jaartal'] = i
+            k += 1
+
+    # Maand om te laten zien bij het hoveren
+
+    lijst_maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli',
+                     'augustus', 'september', 'oktober', 'november', 'december']
+
+    j = 0
+    for i in range(0, 360):
+        gem_temp.loc[i, 'Maand'] = lijst_maanden[j]
+        j += 1
+        if j == 12:
+            j = 0
+
+    fig = px.scatter(data_frame=gem_temp,
+                     x=gem_temp['Tijd'],
+                     y=gem_temp['Gemiddelde'],
+                     trendline='ols',
+                     height=550,
+                     width=950,
+                     title='Spreidingsdiagram gemiddelde temperatuur per maand in Nederland 1981-2010',
+                     trendline_color_override='black',
+                     labels={'Gemiddelde': 'Gemiddelde temperatuur in °C', 'Tijd': 'Jaartal'},
+                     hover_data=['Jaartal', 'Maand'],
+                     color=gem_temp['Maand'],
+                     trendline_scope='overall',
+                     color_discrete_sequence=px.colors.qualitative.Light24)
+
+    # fig.show()
+    return fig
+
 
 # Eerst maar is de data downloaden van de KNMI website
 data = download_data()
@@ -301,11 +390,8 @@ data = download_data()
 
 
 
-st.title('Case 2: Blogpost')
-st.write(' 	- Marcel Zwagerman	500889946\n'
-         '  - Sjoerd Fijne		500828895\n'
-         '  - Mirko Bosch		500888784\n'
-         '  - Martijn Draper	500888847')
+st.title('Hoe was de temperatuur sind 1980 tot 2010')
+
 
 st.title('Inhoudsopgave')
 st.write('  - Samenvatting\n'
@@ -364,10 +450,32 @@ st.write(data_clean.head())
 st.title('Visualisatie')
 st.header('Temperatuur in Nederland, 1981 - 2011')
 
+# stations = st.multiselect(
+#         "Kies meet station", list(data2.columns), ["Valkenburg ZH", "Schiphol NH"]
+#     )
+# if not stations:
+#     st.error("Please select at least one station.")
 fig = line_chart(data2)
 fig.update_layout(height=500, width=1000)
 
 st.plotly_chart(fig)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 st.write('Deze interactieve lijngrafiek gebruikt alle data van de dataset. Op de verticale as is de temperatuur te lezen en op de horizontale as de tijd. Elke meetpunt kan worden geselecteerd en de periode kan je zelf ook aangeven door de selecteren. Dit is een duidelijke globale weergave van de dataset waarmee we nu het volgende mee wilden onderzoeken:\n'
          '- Is er sprake van opwarming van de aarde en hoeveel dan?\n'
@@ -377,13 +485,21 @@ st.write('Deze interactieve lijngrafiek gebruikt alle data van de dataset. Op de
 
 st.header('Gemiddelde temperatuur per maand, 1981 - 2011')
 
-st.title("Hier een grafiek")
+# st.title("Hier een grafiek")
+fig = boxplot(data_clean)
+st.plotly_chart(fig)
+
+fig = boxplot2(data_clean)
+st.plotly_chart(fig)
 
 st.write('Deze spreidingsdiagram geeft een globale weergave aan van temperatuurstijging in Nederland. We moeten er meteen bijzeggen dat dit te weinig data hebben waardoor er toevalligheid kan zijn. En we hebben het gemiddelde genomen van elke maand, dus dat veranderd de trendlijn ook een beetje. (Daarvoor hebben we een tweede grafiek gemaakt waar wel alle data is gebruikt en waar de trendline nauwkeuriger is.) We hebben het gemiddelde van elke maand een apparte kleur gegeven zodat je duidelijk kan aflezen wat voornamelijkst de warmste maanden zijn en wat de koudste maanden.')
 
 st.header('Opwarming van de aarde')
 
 st.title("Hier een grafiek GRAFIEK 0.0447443 * Tijd (jaren) + -78.2203 0.000120045 * Tijd (dagen) + 10.4651")
+fig = scatter(data_clean)
+st.plotly_chart(fig)
+
 
 st.header('Extreme waardes')
 
@@ -398,3 +514,10 @@ st.write("https://docs.streamlit.io/en/stable/getting_started.html#add-text-and-
          "https://developer.dataplatform.knmi.nl/example-scripts"
          "https://dataplatform.knmi.nl/dataset/knmi14-gemiddelde-temperatuur-3-2"
          "https://discuss.streamlit.io/t/how-to-link-a-button-to-a-webpage/1661/7")
+
+
+st.write('made by:\n'
+         ' 	- Marcel Zwagerman	500889946\n'
+         '  - Sjoerd Fijne		500828895\n'
+         '  - Mirko Bosch		500888784\n'
+         '  - Martijn Draper	500888847')
