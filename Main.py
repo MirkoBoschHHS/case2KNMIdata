@@ -629,7 +629,7 @@ if checkbox:
     fig = boxplot2(data_clean)
     st.plotly_chart(fig)
 
-    st.write('De standdaarddeviatie gebruikt de meetpunten van elk meetstation en gaat opzoek naar de standaarddeviatie. Dus bijvoorbeeld als het in Maastricht 17 °C is dan kan het zo zijn dat het in Schiphol iets kouder of warmer is dan die 17 °C. In deze boxplot zie je dat het verschil tussen alle meetstation meestal tussen de 0.5°C en 1 °C ligt.')
+    st.write('De standaarddeviatie van de gemiddelde temperatuur van alle meetstations is een maat voor de spreiding van de temperatuur over verschillende locaties in Nederland. Hoe groter de standaarddeviatie, hoe meer temperatuurverschil tussen de locaties. We zien dat stations gemiddelde zo’n 0,7 graden van elkaar verschillen. Bijna altijd is de standaardafwijking kleiner dan 1,5 graden. Er zijn wel enkele opvallende uitschieters aan de rechterkant te zien.')
 
 
 
@@ -681,7 +681,13 @@ if checkbox:
 
     st.title('Voorspelling')
 
+    st.write('Wij gaan een voorspelling uitvoeren wat de temperatuur is in het jaar 2030, 2050 en 2100. We gebruiken voor deze voorspelling formule: F2. We moeten er wel bij zeggen dat deze voorspelling niet volledig correct kan zijn, omdat we te weinig tijd hadden om een goede analyse te maken en omdat we te weinig data hebben.')
 
+
+    st.write('We voorspellen dat de gemiddelde temperatuur voor: \n'
+             '- 2030: 12.61 °C\n' 
+             '- 2050: 13.49 °C\n' 
+             '- 2100: 15.68 °C')
 
 
 
