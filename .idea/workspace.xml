@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="220dbc81-6326-4394-b183-00f554618ca0" name="Default Changelist" comment="Final upload V0.1">
+    <list default="true" id="220dbc81-6326-4394-b183-00f554618ca0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/packages.txt" beforeDir="false" afterPath="$PROJECT_DIR$/packages.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -138,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632930868799</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="packages.txt aangepast naar enkele =">
+      <created>1632931215414</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1632931215414</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -162,6 +169,7 @@
     <MESSAGE value="Kleine wijziging" />
     <MESSAGE value="Upload voor Martijn" />
     <MESSAGE value="Final upload V0.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Final upload V0.1" />
+    <MESSAGE value="packages.txt aangepast naar enkele =" />
+    <option name="LAST_COMMIT_MESSAGE" value="packages.txt aangepast naar enkele =" />
   </component>
 </project>
