@@ -26,7 +26,7 @@ def download_data():
     get_file_response = requests.get(endpoint, headers={"Authorization": api_key})
     # print(get_file_response.json())
 
-    file_nr = 0  # Maakt het uit welke we kiezen???
+    file_nr = 2  # Maakt het uit welke we kiezen???
     filename = get_file_response.json()['files'][file_nr]['filename']
 
     endpoint = f"{api_url}/{api_version}/datasets/{dataset_name}/versions/{dataset_version}/files/{filename}/url"
@@ -301,7 +301,6 @@ def boxplot(data_clean):
                  labels={'Gemiddelde': 'Gemiddelde temperatuur in °C', 'hover_data_0': 'Datum'},
                  orientation='h',
                  height=300,
-                 width=950,
                  color_discrete_sequence=px.colors.qualitative.Dark2)
 
     fig.update_layout(title="Boxplot gemiddelde temperatuur van weerstations in Nederland 1981-2010", title_x=0.5)
@@ -317,7 +316,6 @@ def boxplot2(data_clean):
                          'hover_data_0': 'Datum'},
                  orientation='h',
                  height=300,
-                 width=950,
                  color_discrete_sequence=px.colors.qualitative.Bold)
 
     fig.update_layout(title="Boxplot standaarddeviatie gemiddelde temperatuur van weerstations in Nederland 1981-2010",
@@ -371,7 +369,7 @@ def scatter(data_clean):
                      y=gem_temp['Gemiddelde'],
                      trendline='ols',
                      height=550,
-                     width=950,
+                     width=750,
                      title='Spreidingsdiagram gemiddelde temperatuur per maand in Nederland 1981-2010',
                      trendline_color_override='black',
                      labels={'Gemiddelde': 'Gemiddelde temperatuur in °C', 'Tijd': 'Jaartal'},
@@ -383,85 +381,255 @@ def scatter(data_clean):
     # fig.show()
     return fig
 
+def scatter2(data_clean):
+    data_clean['Tijd in jaren'] = range(0, len(data_clean))
+    data_clean['Tijd in jaren'] = data_clean['Tijd in jaren'] / 365.25 + 1981
+    data_clean['Gemiddelde temp.'] = data_clean['Gemiddelde']
+
+    fig = px.scatter(data_frame=data_clean,
+                     x=data_clean['Tijd in jaren'],
+                     y=data_clean['Gemiddelde temp.'],
+                     trendline='ols',
+                     height=550,
+                     width=750,
+                     title='Trendlijn gemiddelde temperatuur in Nederland 1981-2010',
+                     trendline_color_override='red',
+                     labels={'Gemiddelde temp.': 'Gemiddelde temperatuur in °C'},
+                     trendline_scope='overall',
+                     range_y=[9, 13],
+                     range_x=[1980, 2012])
+
+    fig.update_traces(visible=False, selector=dict(mode="markers"))
+
+    # fig.show()
+    return fig
+
+def tabel(data_clean):
+    regressie = pd.DataFrame(columns=['De Bilt', 'Rotterdam', 'Maastricht', 'Vlissingen', 'Leeuwarden',
+                                      'Lente', 'Zomer', 'Herfst', 'Winter', 'Totaal'],
+                             index=['Opwarming per 10 jaar', 'lege rij', 'Ondergrens: 0.025', 'Bovengrens: 0.975'])
+
+    # regressie['De Bilt'] = voorspel_stations['De Bilt UT']
+    # regressie['Rotterdam'] = voorspel_stations['Rotterdam ZH']
+    # regressie['Maastricht'] = voorspel_stations['Maastricht LI']
+    # regressie['Vlissingen'] = voorspel_stations['Vlissingen ZE']
+    # regressie['Leeuwarden'] = voorspel_stations['Leeuwarden FR']
+    #
+    # regressie['Lente'] = voorspel_seizoenen['lente']
+    # regressie['Zomer'] = voorspel_seizoenen['zomer']
+    # regressie['Herfst'] = voorspel_seizoenen['herfst']
+    # regressie['Winter'] = voorspel_seizoenen['winter']
+    #
+    # regressie['Totaal'] = voorspel_stations['Gemiddelde']
+
+    regressie2 = regressie.drop(index='lege rij')
+    regressie2.index = ['Geschatte opwarming per 10 jaar', 'Ondergrens schatting', 'Bovengrens schatting']
+    return regressie2
+
+def koudste_warmste(data_clean):
+    # Top 10 koudste en warmste dagen
+    # Leuk feitje: 4 januari 1997 was de laatste Elfstedentocht en ook in 1985 op 21 februari werd hij gereden
+
+    top_10_koud = pd.DataFrame(data_clean.sort_values(by='Gemiddelde')['Gemiddelde'].head(10))
+    top_10_warm = pd.DataFrame(data_clean.sort_values(by='Gemiddelde', ascending=False)['Gemiddelde'].head(10))
+
+    top_10_koud2 = top_10_koud.reset_index()
+    top_10_warm2 = top_10_warm.reset_index()
+
+    top_10 = pd.DataFrame(columns=['Datum van laagste', 'Laagste temperatuur', 'Datum van hoogste', 'Hoogste temperatuur'],
+                          index=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+
+    top_10['Datum van laagste'] = top_10_koud2['Datum']
+    top_10['Laagste temperatuur'] = top_10_koud2['Gemiddelde']
+    top_10['Datum van hoogste'] = top_10_warm2['Datum']
+    top_10['Hoogste temperatuur'] = top_10_warm2['Gemiddelde']
+
+
+
+    top_10.index = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    return top_10
 
 # Eerst maar is de data downloaden van de KNMI website
-data = download_data()
 
 
 
 
-st.title('Hoe was de temperatuur sind 1980 tot 2010')
-
-
-st.title('Inhoudsopgave')
-st.write('  - Samenvatting\n'
-         '  - API ophalen van KNMI\n'
-         '  - Data bewerken\n'
-         '  - Visualisatie')
-
-
-st.title('Samenvatting')
-st.write('Wij hebben een API opgehaald van de KNMI website. Deze data hebben we eerst opgeschoond en gegevens toegevoegd zoals het gemiddelde en standaard deviatie. We hebben vervolgens een globale weergave gemaakt en zijn opzoek gegaan naar een gemiddelde temperatuur stijging, ......')
-
-
-st.title('API ophalen van KNMI')
-st.write('Een API ophalen van het KNMI. KNMI staat voor Koninklijk Nederlands Meteorologisch Instituut.Deze website is van de overheid en delen openbare API\'s waarvan wij er een hebben gebruikt.Deze website legt volledig uit hoe je een API kan inladen in je Jupiter Notebook. We hebben het stappenplan volledig gevolgd en uiteindelijk ingeladen in ons notebook. Hieronder zie je een schematische weergave van de data tabel die we hebben ingeladen.')
-
-st.write(data.head(7))
-
-st.write("Deze data is nu ingeladen maar de eerste 4 regels zijn afwijkend van de rest. Als we kijken naar wat dit is zien we onderanderen de coördinaten. De kolom zijn nu de stations nummers.")
-
-link = '[KNMI API example](https://developer.dataplatform.knmi.nl/example-scripts)'
-st.markdown(link, unsafe_allow_html=True)
-
-st.title('Data bewerken')
-st.write('Voordat we echt kunnen gaan spelen met onze data moeten we de data opschonen. Dit hebben we gedaan door eerst de kolommen een naam te geven. Dit konden we afleiden van het KNMI website. Hier is bijvoorbeeld nummer 240 de locatie op Schiphol. Hieronder zie je een afbeelding waar zo makelijk te herleiden is welk nummer bij welk station hoort.')
-
-# Afbeelding toevoegen: KNMI_meetpunten.png
-
-st.write('Na het toevoegen van de kolommen kwamen we erachter dat we nog een aantal rijen moesten laten vallen, want die behoorde niet tot de dataset. We hebben ook een controlle gedaan of er missende gegevens zijn, maar gelukkig waren er geen missende gegevens. \n \nWe hebben de dataset gekoppieerd waarbij een dataset de datum als een index is en een dataset waarbij de datum een kolom is. Dit hebben we gedaan voor enkele visualisaties die je later in deze blog gaat zien. Na deze aanpassingen hebben we een gemiddelde en een standaard deviatie toegevoegd aan de datasets')
-
-data.set_axis(
-        ['Datum', "Valkenburg ZH", "De Kooy NH", "Schiphol NH", "De Bilt UT", "Leeuwarden FR", "Deelen GE", "Eelde GR",
-         "Twenthe DR", "Vlissingen ZE", "Rotterdam ZH", "Gilze-Rijen NB", "Eindhoven NB", "Volkel NB", "Maastricht LI"],
-        axis=1, inplace=True)
-
-#de data even netjes zetten en een gemiddelde in gooien.
-data2 = data.drop(index=[0,1,2,3])
-data2['Gemiddelde'] = round(data2.iloc[:,1:14].mean(axis=1),1)
-# data2.head() # De kolom 'Datum' is op deze manier niet handig dus die verwijderen
-# Vervolgens een nieuwe kolom voor de datum invoegen die wel correct is (time series)
-
-data3 = data2.drop(columns='Datum')
-data3['Datum'] = pd.date_range("1981-01-01", periods=len(data3), freq="D")
-data_clean = data3.set_index('Datum')
-# data_clean.head() # Nu is de data clean
-
-# We voegen een kolom toe met de gemiddelde temperatuur van alle weerstations
-# En ook een kolom met de standaarddeviatie
-data_clean['Gemiddelde'] = round(data_clean.mean(axis=1),1)
-data_clean['Standaarddeviatie'] = round(data_clean.std(axis=1),1)
-
-
-st.write(data2.head())
-st.write(data_clean.head())
-
-
-st.title('Visualisatie')
-st.header('Temperatuur in Nederland, 1981 - 2011')
-
-# stations = st.multiselect(
-#         "Kies meet station", list(data2.columns), ["Valkenburg ZH", "Schiphol NH"]
-#     )
-# if not stations:
-#     st.error("Please select at least one station.")
-fig = line_chart(data2)
-fig.update_layout(height=500, width=1000)
-
-st.plotly_chart(fig)
+st.image(
+    "https://i.ibb.co/R79T9ct/Naamloos.png",
+    # Manually Adjust the width of the image as per requirement
+)
+st.title('Analyse temperatuur KNMI 1981-2010')
 
 
 
+checkbox = st.checkbox('Selecteer deze checkbox om de blog te lezen')
+try:
+    data = download_data()
+except:
+    st.error("We hebben wel een internet verbinding nodig.")
+
+if checkbox:
+
+    st.title('Inhoudsopgave')
+    st.write('  - Inleiding\n'
+             '  - API ophalen van KNMI\n'
+             '  - Data bewerken\n'
+             '  - Visualisatie\n'
+             '  - Voorspelling\n'
+             '  - Literatuurlijst\n'
+             '  - Gemaakt door')
+
+
+    st.title('Inleiding')
+    # st.write('Wij hebben een API opgehaald van de KNMI website. Deze data hebben we eerst opgeschoond en gegevens toegevoegd zoals het gemiddelde en standaard deviatie. We hebben vervolgens een globale weergave gemaakt en zijn opzoek gegaan naar een gemiddelde temperatuur stijging, ......')
+    st.write('Deze blog is gemaakt door studenten van de minor Data Science aan de Hogeschool van Amsterdam. Zij kregen de opdracht om een data-analyse te maken waarbij de data en het onderwerp zelf mochten worden gekozen. \n\nHet klimaatprobleem is één van de grootste uitdagingen van onze tijd en daarom hebben wij ervoor gekozen om onderzoek te doen naar de temperatuur in Nederland. Via een API van het KNMI hebben we data ingeladen: de gemiddelde temperatuur per dag voor 14 weerstations in Nederland voor de periode 1981 t/m 2010.\n\nMet behulp van de data proberen we antwoord te geven op de volgende vraag: wordt het warmer in Nederland? En zo ja: hoe snel gaat dat? We hebben eerst de data schoongemaakt zodat deze gebruiksklaar was en vervolgens hebben we verschillende analyses uitgevoerd en visualisaties gemaakt. Hierbij hebben we gebruik gemaakt van de programmeertaal Python en Jupyter Notebook. Veel leesplezier!')
+
+    st.title('Data ophalen via een API van het KNMI')
+    st.write('KNMI staat voor Koninklijk Nederlands Meteorologisch Instituut. Het KNMI heeft een website en deze is van de overheid. Op de website staan openbare API’s (Application Programming Interface) waarvan wij er één hebben gebruikt. Deze website legt volledig uit hoe je met een API data kan inladen. We hebben het stappenplan volledig gevolgd en uiteindelijk data ingeladen in Jupyter Notebook. We gebruiken Jupyter Notebook om met Python te werken. Hieronder zie je een schematische weergave van de data-tabel die we hebben ingeladen.')
+
+
+    st.write(data.head(7))
+
+    link = '[KNMI API example](https://developer.dataplatform.knmi.nl/example-scripts)'
+    st.markdown(link, unsafe_allow_html=True)
+
+
+    data.set_axis(
+            ['Datum', "Valkenburg ZH", "De Kooy NH", "Schiphol NH", "De Bilt UT", "Leeuwarden FR", "Deelen GE", "Eelde GR",
+             "Twenthe DR", "Vlissingen ZE", "Rotterdam ZH", "Gilze-Rijen NB", "Eindhoven NB", "Volkel NB", "Maastricht LI"],
+            axis=1, inplace=True)
+
+    #de data even netjes zetten en een gemiddelde in gooien.
+    data2 = data.drop(index=[0,1,2,3])
+    data2['Gemiddelde'] = round(data2.iloc[:,1:14].mean(axis=1),1)
+    # data2.head() # De kolom 'Datum' is op deze manier niet handig dus die verwijderen
+    # Vervolgens een nieuwe kolom voor de datum invoegen die wel correct is (time series)
+
+    data3 = data2.drop(columns='Datum')
+    data3['Datum'] = pd.date_range("1981-01-01", periods=len(data3), freq="D")
+    data_clean = data3.set_index('Datum')
+    # data_clean.head() # Nu is de data clean
+
+    # We voegen een kolom toe met de gemiddelde temperatuur van alle weerstations
+    # En ook een kolom met de standaarddeviatie
+    data_clean['Gemiddelde'] = round(data_clean.mean(axis=1),1)
+    data_clean['Standaarddeviatie'] = round(data_clean.std(axis=1),1)
+
+    st.title('Data schoonmaken & bewerken')
+    st.write('Voordat we echt aan de slag kunnen met onze data moeten we de data opschonen. Dit hebben we gedaan door eerst de kolommen een naam te geven. Dit konden we afleiden van de KNMI-website. Hier is bijvoorbeeld nummer 240 de locatie op Schiphol. Hieronder zie je een afbeelding waar zo makkelijk te herleiden is welk nummer bij welk station hoort. Na het toevoegen van de kolommen kwamen we erachter dat we nog een aantal rijen moesten laten vallen, want die behoorden niet tot de relevante data. We hebben ook een controle gedaan of er missende gegevens waren, maar gelukkig waren die er niet. We hebben de kolom met getallen die de datum moeten voorstellen omgezet in werkelijke tijdsdata (een zogenaamde timeseries). Dit was noodzakelijk om te kunnen filteren op bijvoorbeeld een specifiek jaar. Vervolgens hebben we nog een kolom met de gemiddelde temperatuur van alle weerstations toegevoegd en een kolom met de standaardafwijking daarvan.')
+
+    # Afbeelding toevoegen: KNMI_meetpunten.png
+    st.image(
+        "https://i.ibb.co/2cVCFHZ/Microsoft-Teams-image.png",
+          # Manually Adjust the width of the image as per requirement
+    )
+
+    st.write('Na het toevoegen van de kolommen kwamen we erachter dat we nog een aantal rijen moesten laten vallen, want die behoorde niet tot de dataset. We hebben ook een controlle gedaan of er missende gegevens zijn, maar gelukkig waren er geen missende gegevens. ')
+
+    st.write(data2.head())
+
+    st.write('We hebben de dataset gekoppieerd waarbij een dataset de datum als een index is en een dataset waarbij de datum een kolom is. Dit hebben we gedaan voor enkele visualisaties die je later in deze blog gaat zien. Na deze aanpassingen hebben we een gemiddelde en een standaard deviatie toegevoegd aan de datasets')
+
+
+
+    st.write(data_clean.head())
+
+
+    st.title('Visualisaties')
+    st.header('Temperatuur in Nederland, 1981 - 2010')
+
+    stations = st.multiselect(
+            "Kies meet station", list(data_clean.columns), ["Valkenburg ZH", "Schiphol NH"]
+        )
+
+
+    if not stations:
+        st.error("Please select at least one station.")
+    else:
+        data_search = data_clean.loc[:, stations]
+        # st.write("Geselecteerde data", data_search.sort_index())
+        # st.line_chart(data_search)
+
+        fig = px.line(data_search)
+        # fig = make_subplots(specs=[[{"secondary_y": True}]])
+        # fig.add_trace(go.Scatter(data_search))
+
+        fig.update_layout(
+            xaxis=dict(
+                rangeselector=dict(
+                    buttons=list([
+                        dict(count=1,
+                             label="1m",
+                             step="month",
+                             stepmode="backward"),
+                        dict(count=6,
+                             label="6m",
+                             step="month",
+                             stepmode="backward"),
+                        dict(count=1,
+                             label="YTD",
+                             step="year",
+                             stepmode="todate"),
+                        dict(count=1,
+                             label="1y",
+                             step="year",
+                             stepmode="backward"),
+                        dict(step="all")
+                    ])
+                ),
+                rangeslider=dict(
+                    visible=True
+                ),
+                type="date"
+            )
+        )
+        fig.update_xaxes(rangeslider_visible=True)
+        fig.update_layout(
+            title_text="Temperatuur over de tijd van alle meetpunten en het gemiddelde"
+        )
+
+        fig.update_xaxes(title_text="Tijd in dagen/maanden/jaar (met scrollbar)")
+
+        fig.update_yaxes(title_text="Temperatuur in graden Culsius (°C)",
+                         secondary_y=False)
+        st.plotly_chart(fig)
+
+    st.write('Deze interactieve lijngrafiek gebruikt alle data van de dataset. Op de verticale as is de temperatuur te lezen en op de horizontale as de tijd. Elke meetpunt kan worden geselecteerd en de periode kan je zelf ook aangeven door te selecteren. Dit is een duidelijke globale weergave van de dataset. Om een nog beter beeld te krijgen van de data hebben we de volgende visualisaties gemaakt:\n'
+             '- Boxplot gemiddelde temperatuur, 1981-2010\n'
+             '- Boxplot standaarddeviatie, 1981-2010\n'
+             '- Gemiddelde temperatuur per maand, 1981 - 2010?\n'
+             '- Opwarming van Nederland\n'
+             '- Extreme waardes')
+
+
+
+
+
+
+    # fig = line_chart(data2)
+    # fig.update_layout(height=500, width=1000)
+    #
+    # st.plotly_chart(fig)
+
+    st.header('Boxplot gemiddelde temperatuur, 1981-2010')
+
+
+
+    fig = boxplot(data_clean)
+    st.plotly_chart(fig)
+
+
+
+    st.write('We hadden twee kolommen toegevoegd aan de dataset, namelijk de gemiddelde temperatuur van alle weerstations en de standaarddeviatie daarvan. Een boxplot zet al die waardes op een rijtje van klein naar groot en pakt vervolgens de mediaan, het getal wat in het midden ligt. Dat is de verticale groene streep in het midden van de grafiek. De waarde hiervan is 11,1 °C. Vervolgens pakt hij de waardes die op 1/4 en op 3/4 van de getallenreeks staan. In dit geval 6,6 °C en 16 °C. Dit maakt samen de box en 50% van alle waarnemingen liggen hierin. De twee lijnen die uitsteken aan de box bevatten de meeste overige waardes, de onderste en bovenste 25%. Echter, je ziet nog enkele punten aan de linker kant. Dit zijn uitbijters, extreme waarden. De boxplot geeft dus inzicht in de verdeling van de gemiddelde temperatuur.')
+
+    st.header('Boxplot standaarddeviatie, 1981-2010')
+
+    fig = boxplot2(data_clean)
+    st.plotly_chart(fig)
+
+    st.write('De standdaarddeviatie gebruikt de meetpunten van elk meetstation en gaat opzoek naar de standaarddeviatie. Dus bijvoorbeeld als het in Maastricht 17 °C is dan kan het zo zijn dat het in Schiphol iets kouder of warmer is dan die 17 °C. In deze boxplot zie je dat het verschil tussen alle meetstation meestal tussen de 0.5°C en 1 °C ligt.')
 
 
 
@@ -477,47 +645,58 @@ st.plotly_chart(fig)
 
 
 
-st.write('Deze interactieve lijngrafiek gebruikt alle data van de dataset. Op de verticale as is de temperatuur te lezen en op de horizontale as de tijd. Elke meetpunt kan worden geselecteerd en de periode kan je zelf ook aangeven door de selecteren. Dit is een duidelijke globale weergave van de dataset waarmee we nu het volgende mee wilden onderzoeken:\n'
-         '- Is er sprake van opwarming van de aarde en hoeveel dan?\n'
-         '- Boxplot?\n'
-         '- Histogram?\n'
-         '- ahhhh')
-
-st.header('Gemiddelde temperatuur per maand, 1981 - 2011')
-
-# st.title("Hier een grafiek")
-fig = boxplot(data_clean)
-st.plotly_chart(fig)
-
-fig = boxplot2(data_clean)
-st.plotly_chart(fig)
-
-st.write('Deze spreidingsdiagram geeft een globale weergave aan van temperatuurstijging in Nederland. We moeten er meteen bijzeggen dat dit te weinig data hebben waardoor er toevalligheid kan zijn. En we hebben het gemiddelde genomen van elke maand, dus dat veranderd de trendlijn ook een beetje. (Daarvoor hebben we een tweede grafiek gemaakt waar wel alle data is gebruikt en waar de trendline nauwkeuriger is.) We hebben het gemiddelde van elke maand een apparte kleur gegeven zodat je duidelijk kan aflezen wat voornamelijkst de warmste maanden zijn en wat de koudste maanden.')
-
-st.header('Opwarming van de aarde')
-
-st.title("Hier een grafiek GRAFIEK 0.0447443 * Tijd (jaren) + -78.2203 0.000120045 * Tijd (dagen) + 10.4651")
-fig = scatter(data_clean)
-st.plotly_chart(fig)
 
 
-st.header('Extreme waardes')
 
-st.title("Hier een tabel")
+    st.header('Gemiddelde temperatuur per maand, 1981 - 2010')
+    st.write("F1: 0.0447443 * Tijd (jaren) + -78.2203")
+    fig = scatter(data_clean)
+    st.plotly_chart(fig)
 
-st.write('Hierboven zie je een tabel van de top 10 koudste en warmste dagen van de periode 1981 - 2011. Je moet nagaan dat dit de gemiddelde temperatuur is van de hele dag. Dus er is om de zoveel tijd weer nieuwe meting gedaan en daarvan is het gemiddelde gedaan. Dus dat wil zeggen dat 27,9 °C niet de maximale temperatuur is, maar het gemiddelde. "Juli 2006 warmste maand in zeker 300 jaar" zegt het KNMI.')
+    st.write('Deze spreidingsdiagram geeft een globale weergave aan van temperatuurstijging in Nederland. We moeten er meteen bijzeggen dat dit te weinig data hebben waardoor er toevalligheid kan zijn. En we hebben het gemiddelde genomen van elke maand, dus dat veranderd de trendlijn ook een beetje. (Daarvoor hebben we een tweede grafiek gemaakt waar wel alle data is gebruikt en waar de trendline nauwkeuriger is.) We hebben het gemiddelde van elke maand een apparte kleur gegeven zodat je duidelijk kan aflezen wat voornamelijkst de warmste maanden zijn en wat de koudste maanden.')
 
-st.title("Links")
-st.write("https://docs.streamlit.io/en/stable/getting_started.html#add-text-and-data"
-         "https://docs.streamlit.io/en/stable/api.html#magic-commands"
-         "https://www.clo.nl/indicatoren/nl022613-temperatuur-mondiaal-en-in-nederland"
-         "https://developer.dataplatform.knmi.nl/example-scripts"
-         "https://dataplatform.knmi.nl/dataset/knmi14-gemiddelde-temperatuur-3-2"
-         "https://discuss.streamlit.io/t/how-to-link-a-button-to-a-webpage/1661/7")
+    st.header('Opwarming van Nederland')
+
+    st.write("F2: 0.000120045 * Tijd (dagen) + 10.4651")
+
+    fig = scatter2(data_clean)
+    st.plotly_chart(fig)
+
+    st.write('Deze grafiek is bijna hetzelfde als de gemiddelde temperatuur per maand, alleen is hier ingezoomd om de trendlijn en zijn alle data gebruikt en geen gemiddelde. Bij beide grafieken staan twee formules omschreven, F1 en F2. F1 heeft een stijging van 0.0447443 per jaar. F2 heeft een stijging van 0.0438164 per jaar. Het verschil door het gemiddelde hebben we eruit gehaald, waardoor F2 veel nauwkeuriger is.')
 
 
-st.write('made by:\n'
-         ' 	- Marcel Zwagerman	500889946\n'
-         '  - Sjoerd Fijne		500828895\n'
-         '  - Mirko Bosch		500888784\n'
-         '  - Martijn Draper	500888847')
+
+
+
+
+
+    st.header('Extreme waardes')
+
+    extreme = koudste_warmste(data_clean)
+    st.write(extreme)
+
+    st.write('Hierboven zie je een tabel van de top 10 koudste en warmste dagen van de periode 1981 - 2010. Je moet nagaan dat dit de gemiddelde temperatuur is van de hele dag. Dus er is om de zoveel tijd weer nieuwe meting gedaan en daarvan is het gemiddelde gedaan. Dus dat wil zeggen dat 27,9 °C niet de maximale temperatuur is, maar het gemiddelde. "Juli 2006 warmste maand in zeker 300 jaar" zegt het KNMI. Aan de hand van deze gegevens gaan we een voorspelling doen.')
+
+
+
+    st.title('Voorspelling')
+
+
+
+
+
+
+    st.title("Literatuurlijst")
+    st.write("https://docs.streamlit.io/en/stable/getting_started.html#add-text-and-data"
+             "https://docs.streamlit.io/en/stable/api.html#magic-commands"
+             "https://www.clo.nl/indicatoren/nl022613-temperatuur-mondiaal-en-in-nederland"
+             "https://developer.dataplatform.knmi.nl/example-scripts"
+             "https://dataplatform.knmi.nl/dataset/knmi14-gemiddelde-temperatuur-3-2"
+             "https://discuss.streamlit.io/t/how-to-link-a-button-to-a-webpage/1661/7")
+
+
+    st.title('Gemaakt door')
+    st.write(' 	- Marcel Zwagerman	500889946\n'
+             '  - Sjoerd Fijne		500828895\n'
+             '  - Mirko Bosch		500888784\n'
+             '  - Martijn Draper	500888847')
