@@ -325,7 +325,7 @@ st.write(data.head(7))
 
 st.write("Deze data is nu ingeladen maar de eerste 4 regels zijn afwijkend van de rest. Als we kijken naar wat dit is zien we onderanderen de coördinaten. De kolom zijn nu de stations nummers.")
 
-link = '[KNMI](https://developer.dataplatform.knmi.nl/example-scripts)'
+link = '[KNMI API example](https://developer.dataplatform.knmi.nl/example-scripts)'
 st.markdown(link, unsafe_allow_html=True)
 
 st.title('Data bewerken')
