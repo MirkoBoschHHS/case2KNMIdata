@@ -3,3 +3,4 @@ requests==2.26.0
 plotly==5.3.1
 streamlit==0.89.0
 statsmodels==0.12.2
+numpy==1.21.2
