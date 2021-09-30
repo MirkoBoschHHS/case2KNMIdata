@@ -689,7 +689,7 @@ if checkbox:
     
     
     
-    st.header('Lijndiagram temperatuurstijging (Opwarming in Nederland)')
+    st.header('Lijndiagram temperatuurstijging')
 
     st.write("F2: 0.0438281 * Tijd (jaren) + -763592")
 
@@ -726,7 +726,7 @@ if checkbox:
     
     # HIER nog code
     st.image(
-    "https://prnt.sc/1u74g15",
+    "https://i.ibb.co/NWRKmmk/Microsoft-Teams-image-1.png",
     # Manually Adjust the width of the image as per requirement
     )
     
