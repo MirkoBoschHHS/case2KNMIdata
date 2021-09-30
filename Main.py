@@ -377,7 +377,30 @@ def scatter(data_clean):
                      color=gem_temp['Maand'],
                      trendline_scope='overall',
                      color_discrete_sequence=px.colors.qualitative.Light24)
+    
+    annotation1 = {'x':1997,
+    'y':0.5,
+    'showarrow':True,
+    'arrowhead':5,
+    'text':"Laatste elfstedentocht",
+    'font':{'size': 11}}
 
+    annotation2 = {'x':1986,
+    'y':-1.2,
+    'showarrow':True,
+    'arrowhead':5,
+    'text':"Elfstedentocht 1986",
+    'font':{'size': 11}}
+
+    annotation3 = {'x':1982,
+    'y':-1.5,
+    'showarrow':False,
+    'arrowhead':5,
+    'text':"Elfstedentocht 1985",
+    'font':{'size': 11}}
+
+    fig.update_layout({'annotations': [annotation1, annotation2, annotation3]})
+    
     # fig.show()
     return fig
 
@@ -613,7 +636,7 @@ if checkbox:
     #
     # st.plotly_chart(fig)
 
-    st.header('Boxplot gemiddelde temperatuur, 1981-2010')
+    st.header('Boxplot gemiddelde temperatuur')
 
 
 
@@ -624,7 +647,7 @@ if checkbox:
 
     st.write('We hadden twee kolommen toegevoegd aan de dataset, namelijk de gemiddelde temperatuur van alle weerstations en de standaarddeviatie daarvan. Een boxplot zet al die waardes op een rijtje van klein naar groot en pakt vervolgens de mediaan, het getal wat in het midden ligt. Dat is de verticale groene streep in het midden van de grafiek. De waarde hiervan is 11,1 °C. Vervolgens pakt hij de waardes die op 1/4 en op 3/4 van de getallenreeks staan. In dit geval 6,6 °C en 16 °C. Dit maakt samen de box en 50% van alle waarnemingen liggen hierin. De twee lijnen die uitsteken aan de box bevatten de meeste overige waardes, de onderste en bovenste 25%. Echter, je ziet nog enkele punten aan de linker kant. Dit zijn uitbijters, extreme waarden. De boxplot geeft dus inzicht in de verdeling van de gemiddelde temperatuur.')
 
-    st.header('Boxplot standaarddeviatie, 1981-2010')
+    st.header('Boxplot standaarddeviatie')
 
     fig = boxplot2(data_clean)
     st.plotly_chart(fig)
@@ -648,13 +671,17 @@ if checkbox:
 
 
 
-    st.header('Gemiddelde temperatuur per maand, 1981 - 2010')
+    st.header('Gemiddelde temperatuur per maand')
     st.write("F1: 0.0447443 * Tijd (jaren) + -78.2203")
     fig = scatter(data_clean)
     st.plotly_chart(fig)
 
     st.write('Deze spreidingsdiagram geeft een globale weergave aan van temperatuurstijging in Nederland. We moeten er meteen bijzeggen dat dit te weinig data hebben waardoor er toevalligheid kan zijn. En we hebben het gemiddelde genomen van elke maand, dus dat veranderd de trendlijn ook een beetje. (Daarvoor hebben we een tweede grafiek gemaakt waar wel alle data is gebruikt en waar de trendline nauwkeuriger is.) We hebben het gemiddelde van elke maand een apparte kleur gegeven zodat je duidelijk kan aflezen wat voornamelijkst de warmste maanden zijn en wat de koudste maanden.')
 
+    
+    
+    
+    
     st.header('Opwarming van Nederland')
 
     st.write("F2: 0.000120045 * Tijd (dagen) + 10.4651")
