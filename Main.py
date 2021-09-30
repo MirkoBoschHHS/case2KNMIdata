@@ -475,75 +475,6 @@ def koudste_warmste(data_clean):
     return top_10
 
 
-def regressie(data_clean):
-    lm_stations = pd.DataFrame(index=['rc','intercept','r','p','stdfout rc'])
- 
-    for i in range(0,15) :
-        x = range(0,len(data_clean))
-        y = data_clean.iloc[:,i]
-        lm_stations[i] = linregress(x, y)
-
-    lm_stations.columns=['Valkenburg ZH','De Kooy NH','Schiphol NH','De Bilt UT','Leeuwarden FR','Deelen GE','Eelde GR',
-                         'Twenthe DR','Vlissingen ZE','Rotterdam ZH','Gilze-Rijen NB','Eindhoven NB','Volkel NB','Maastricht LI',
-                        'Gemiddelde']
-
-    voorspel_stations = lm_stations.loc[['rc','stdfout rc','r','p']]
-
-    for i in range(0,15) : 
-        voorspel_stations.iloc[:,i] = round(voorspel_stations.iloc[:,i]*len(data_clean)/3,2)
-
-    voorspel_stations.index=['Opwarming per 10 jaar','Standaardfout','Ondergrens: 0.025','Bovengrens: 0.975']
-
-    voorspel_stations.iloc[2,:] = round(voorspel_stations.iloc[0,:] - 1.96*voorspel_stations.iloc[1,:],2)
-    voorspel_stations.iloc[3,:] = round(voorspel_stations.iloc[0,:] + 1.96*voorspel_stations.iloc[1,:],2)
-
-    lm_seizoenen = pd.DataFrame(index=['rc','intercept','r','p','stdfout rc'])
- 
-    seizoenen = [data_lente, data_zomer, data_herfst, data_winter]
-
-    for i in range(0,4) : 
-        x = range(0,len(seizoenen[i]))
-        y = seizoenen[i].iloc[:,14]
-        lm_seizoenen[i] = linregress(x, y)
-
-    lm_seizoenen.columns=['lente','zomer','herfst','winter']
-
-    voorspel_seizoenen = lm_seizoenen.loc[['rc','stdfout rc','r','p']]
-
-    for i in range(0,4) : 
-        voorspel_seizoenen.iloc[:,i] = round(voorspel_seizoenen.iloc[:,i]*len(seizoenen[i])/3,2)
-
-    voorspel_seizoenen.index=['Opwarming per 10 jaar','Standaardfout','Ondergrens: 0.025','Bovengrens: 0.975']
-
-    voorspel_seizoenen.iloc[2,:] = round(voorspel_seizoenen.iloc[0,:] - 1.96*voorspel_seizoenen.iloc[1,:],2)
-    voorspel_seizoenen.iloc[3,:] = round(voorspel_seizoenen.iloc[0,:] + 1.96*voorspel_seizoenen.iloc[1,:],2)
-
-    regressie = pd.DataFrame(columns=['De Bilt','Rotterdam','Maastricht','Vlissingen','Leeuwarden',
-                                 'Lente','Zomer','Herfst','Winter','Totaal'],
-                        index=['Opwarming per 10 jaar','lege rij','Ondergrens: 0.025','Bovengrens: 0.975'])
- 
-    regressie['De Bilt'] = voorspel_stations['De Bilt UT']
-    regressie['Rotterdam'] = voorspel_stations['Rotterdam ZH']
-    regressie['Maastricht'] = voorspel_stations['Maastricht LI']
-    regressie['Vlissingen'] = voorspel_stations['Vlissingen ZE']
-    regressie['Leeuwarden'] = voorspel_stations['Leeuwarden FR']
-
-    regressie['Lente'] = voorspel_seizoenen['lente']
-    regressie['Zomer'] = voorspel_seizoenen['zomer']
-    regressie['Herfst'] = voorspel_seizoenen['herfst']
-    regressie['Winter'] = voorspel_seizoenen['winter']
-
-    regressie['Totaal'] = voorspel_stations['Gemiddelde']
-
-    regressie2 = regressie.drop(index='lege rij')
-    regressie2.index=['Geschatte opwarming per 10 jaar','Ondergrens schatting','Bovengrens schatting']
-    
-    return regressie2
-
-
-
-
-
 
 
 
@@ -794,8 +725,10 @@ if checkbox:
     st.write('Op deze manier hebben we onderzocht of de opwarming in Nederland verschilt per locatie of per periode van het jaar. De belangrijkste resultaten hiervan zijn in de tabel hieronder te zien. De meteorologische seizoenen zijn gedefineerd als lente, zomer, herfst en winter')
     
     # HIER nog code
-    regressie = regressie(data_clean)
-    st.plotly_chart(regressie)
+    st.image(
+    "https://prnt.sc/1u74g15",
+    # Manually Adjust the width of the image as per requirement
+    )
     
     st.write('We zijn vooral geïnteresseerd in de richtingscoëfficiënt (de helling van de trendlijn) en daarom hebben we de constante term (intercept) hier weggelaten. In de context betekent dat dat we kijken naar de stijging van de temperatuur en niet naar de waarde van de temperatuur zelf.\n\n'
              'De kolom ‘Totaal’ geeft de resultaten weer voor het gemiddelde van de weerstations over alle data. De verwachting is dus dat het elke 10 jaar 0,44 graden warmer wordt in Nederland. De waardes 0,30 en 0,58 zijn de grenzen voor de schatting. We verwachten dat de werkelijke temperatuurstijging zeer waarschijnlijk binnen deze grenzen ligt. Voor de wiskundigen: het is een 95% betrouwbaarheidsinterval voor de richtingscoëfficiënt uitgaande dat het normaal verdeeld is voor die richtingscoëfficiënt.\n\n'
