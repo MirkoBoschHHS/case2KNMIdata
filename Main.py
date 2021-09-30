@@ -708,16 +708,31 @@ if checkbox:
 
     st.title('Regressie-analyse & voorspelling')
 
-    st.write('Wij gaan een voorspelling uitvoeren wat de temperatuur is in het jaar 2030, 2050 en 2100. We gebruiken voor deze voorspelling formule: F2. We moeten er wel bij zeggen dat deze voorspelling niet volledig correct kan zijn, omdat we te weinig tijd hadden om een goede analyse te maken en omdat er te weinig data is.')
+    st.write('Om voorspellingen te kunnen doen voor de gemiddelde temperatuur in Nederland hebben we verschillende regressie-analyses uitgevoerd. We hebben 31 verschillende enkelvoudige regressiemodellen gemaakt, met telkens op de x-as de tijd en op de y-as de temperatuur:\n'
+                '- Een model voor elk weerstation (14 in totaal) aan de hand van alle data van dat weerstation\n'
+                '- Een model voor het gemiddelde van alle weerstations met data van het hele jaar \n'
+                '- Een model voor het gemiddelde van alle weerstations met data per meteorologisch seizoen\n'
+                '- Een model voor het gemiddelde van alle weerstations met data per maand\n')
 
-
-    st.write('We voorspellen dat de gemiddelde temperatuur voor: \n'
-             '- 2030: 12.61 °C\n' 
+    
+    st.write('Op deze manier hebben we onderzocht of de opwarming in Nederland verschilt per locatie of per periode van het jaar. De belangrijkste resultaten hiervan zijn in de tabel hieronder te zien. De meteorologische seizoenen zijn gedefineerd als lente, zomer, herfst en winter')
+    
+    # HIER nog code
+    
+    st.write('We zijn vooral geïnteresseerd in de richtingscoëfficiënt (de helling van de trendlijn) en daarom hebben we de constante term (intercept) hier weggelaten. In de context betekent dat dat we kijken naar de stijging van de temperatuur en niet naar de waarde van de temperatuur zelf.\n\n'
+             'De kolom ‘Totaal’ geeft de resultaten weer voor het gemiddelde van de weerstations over alle data. De verwachting is dus dat het elke 10 jaar 0,44 graden warmer wordt in Nederland. De waardes 0,30 en 0,58 zijn de grenzen voor de schatting. We verwachten dat de werkelijke temperatuurstijging zeer waarschijnlijk binnen deze grenzen ligt. Voor de wiskundigen: het is een 95% betrouwbaarheidsinterval voor de richtingscoëfficiënt uitgaande dat het normaal verdeeld is voor die richtingscoëfficiënt.\n\n'
+             'Verder kan men aflezen dat de verschillen tussen de weerstations klein zijn. Voor dit overzicht hebben we 5 weerstations uitgekozen die zoveel mogelijk verspreid zijn over Nederland. Bij de seizoenen zijn grote verschillen te zien: in de lente en zomer warmte het veel meer op dan in de herfst en winter. In de herfst is het überhaupt niet echt duidelijk of er wel sprake is van opwarming.\n\n'
+             'Ten slotte kunnen we met formule F2 voorspellingen doen voor de gemiddelde temperatuur in Nederland in de toekomst door een aantal jaartallen in te vullen in die formule:')
+    
+    st.write('- 2030: 12.61 °C\n' 
              '- 2050: 13.49 °C\n' 
              '- 2100: 15.68 °C')
 
 
 
+    st.title('Conclusie')
+    
+    st.write('In dit onderzoek hebben we de gemiddelde temperatuur per dag in Nederland bestudeerd voor 14 verschillende meetstations in de periode 1981 - 2010. Het is duidelijk dat het warmer wordt in Nederland, maar hoe snel dat gaat kunnen we niet zo nauwkeurig zeggen. Er zit wat dat betreft nog aardig wat spreiding in de voorspellingen die we kunnen doen. Om tot betere resultaten te komen is meer data nodig. Verder hebben we ontdekt dat de opwarming weinig verschilt per locatie in Nederland maar dat er wel aanzienlijke verschillen zijn tussen de seizoenen. In de lente en zomer warmt het duidelijk meer op dan in de herfst en de winter.')
 
     st.title("Literatuurlijst")
     st.write("https://docs.streamlit.io/en/stable/getting_started.html#add-text-and-data"
