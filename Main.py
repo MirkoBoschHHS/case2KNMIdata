@@ -507,10 +507,10 @@ if checkbox:
 
     st.title('Inleiding')
     # st.write('Wij hebben een API opgehaald van de KNMI website. Deze data hebben we eerst opgeschoond en gegevens toegevoegd zoals het gemiddelde en standaard deviatie. We hebben vervolgens een globale weergave gemaakt en zijn opzoek gegaan naar een gemiddelde temperatuur stijging, ......')
-    st.write('Deze blog is gemaakt door studenten van de minor Data Science aan de Hogeschool van Amsterdam. Zij kregen de opdracht om een data-analyse te maken waarbij de data en het onderwerp zelf mochten worden gekozen. \n\nHet klimaatprobleem is één van de grootste uitdagingen van onze tijd en daarom hebben wij ervoor gekozen om onderzoek te doen naar de temperatuur in Nederland. Via een API van het KNMI hebben we data ingeladen: de gemiddelde temperatuur per dag voor 14 weerstations in Nederland voor de periode 1981 t/m 2010.\n\nMet behulp van de data proberen we antwoord te geven op de volgende vraag: wordt het warmer in Nederland? En zo ja: hoe snel gaat dat? We hebben eerst de data schoongemaakt zodat deze gebruiksklaar was en vervolgens hebben we verschillende analyses uitgevoerd en visualisaties gemaakt. Hierbij hebben we gebruik gemaakt van de programmeertaal Python en Jupyter Notebook. Veel leesplezier!')
+    st.write('Deze blog is gemaakt door studenten van de minor Data Science aan de Hogeschool van Amsterdam. Zij kregen de opdracht om een data-analyse te maken waarbij de data en het onderwerp zelf mocht worden gekozen. \n\nHet klimaatprobleem is één van de grootste uitdagingen van onze tijd en daarom hebben wij ervoor gekozen om onderzoek te doen naar de temperatuur in Nederland. Via een API van het KNMI hebben we data ingeladen: de gemiddelde temperatuur per dag voor 14 weerstations in Nederland voor de periode van 1981 t/m 2010.\n\nMet behulp van de data proberen we antwoord te geven op de volgende vraag: wordt het warmer in Nederland? En zo ja: hoe snel gaat dat? We hebben eerst de data ingeladen en schoongemaakt zodat deze gebruiksklaar was. Vervolgens hebben we verschillende analyses uitgevoerd en visualisaties gemaakt. Hierbij hebben we gebruik gemaakt van de programmeertaal Python en Jupyter Notebook. Veel leesplezier!')
 
     st.title('Data ophalen via een API van het KNMI')
-    st.write('KNMI staat voor Koninklijk Nederlands Meteorologisch Instituut. Het KNMI heeft een website en deze is van de overheid. Op de website staan openbare API’s (Application Programming Interface) waarvan wij er één hebben gebruikt. Deze website legt volledig uit hoe je met een API data kan inladen. We hebben het stappenplan volledig gevolgd en uiteindelijk data ingeladen in Jupyter Notebook. We gebruiken Jupyter Notebook om met Python te werken. Hieronder zie je een schematische weergave van de data-tabel die we hebben ingeladen.')
+    st.write('KNMI staat voor Koninklijk Nederlands Meteorologisch Instituut. Het KNMI heeft een website die van de overheid is. Met behulp van de KKNMI API (Application Programming Interface) hebben wij één van de dataset\'s opgehaald. De website van de KNMI legt volledig uit hoe je met een API data kan inladen. We hebben het stappenplan volledig gevolgd en uiteindelijk data ingeladen in Jupyter Notebook. We gebruiken Jupyter Notebook om met Python te werken. Hieronder is het eerste deel van de opgehaalde dataset te zien. ')
 
 
     st.write(data.head(7))
@@ -541,7 +541,7 @@ if checkbox:
     data_clean['Standaarddeviatie'] = round(data_clean.std(axis=1),1)
 
     st.title('Data schoonmaken & bewerken')
-    st.write('Voordat we echt aan de slag kunnen met onze data moeten we de data opschonen. Dit hebben we gedaan door eerst de kolommen een naam te geven. Dit konden we afleiden van de KNMI-website. Hier is bijvoorbeeld nummer 240 de locatie op Schiphol. Hieronder zie je een afbeelding waar zo makkelijk te herleiden is welk nummer bij welk station hoort. Na het toevoegen van de kolommen kwamen we erachter dat we nog een aantal rijen moesten laten vallen, want die behoorden niet tot de relevante data. We hebben ook een controle gedaan of er missende gegevens waren, maar gelukkig waren die er niet. We hebben de kolom met getallen die de datum moeten voorstellen omgezet in werkelijke tijdsdata (een zogenaamde timeseries). Dit was noodzakelijk om te kunnen filteren op bijvoorbeeld een specifiek jaar. Vervolgens hebben we nog een kolom met de gemiddelde temperatuur van alle weerstations toegevoegd en een kolom met de standaardafwijking daarvan.')
+    st.write('Voordat we echt aan de slag kunnen met onze data moeten we de data opschonen. Dit hebben we gedaan door eerst de kolommen een naam te geven. Dit konden we afleiden van de KNMI-website. Hier is bijvoorbeeld nummer 240 het meetstation op Schiphol. Hieronder zie je een afbeelding waar te herleiden is welk nummer bij welk station hoort. Na het toevoegen van de kolommen waren er nog een aantal rijen die niet relevant zijn, onderanderen de coördinaten, deze zijn uit de dataset gehaald. We hebben ook een controle gedaan of er missende gegevens waren, maar gelukkig waren die er niet. We hebben de kolom met getallen die de datum moeten voorstellen omgezet in werkelijke tijdsdata (een zogenaamde timeseries). Dit was noodzakelijk om te kunnen filteren op bijvoorbeeld een specifiek jaar. Vervolgens hebben we nog een kolom met de gemiddelde temperatuur van alle weerstations toegevoegd en een kolom met de standaardafwijking daarvan.')
 
     # Afbeelding toevoegen: KNMI_meetpunten.png
     st.image(
@@ -549,11 +549,11 @@ if checkbox:
           # Manually Adjust the width of the image as per requirement
     )
 
-    st.write('Na het toevoegen van de kolommen kwamen we erachter dat we nog een aantal rijen moesten laten vallen, want die behoorde niet tot de dataset. We hebben ook een controlle gedaan of er missende gegevens zijn, maar gelukkig waren er geen missende gegevens. ')
+#     st.write('Na het toevoegen van de kolommen kwamen we erachter dat we nog een aantal rijen moesten laten vallen, want die behoorde niet tot de dataset. We hebben ook een controlle gedaan of er missende gegevens zijn, maar gelukkig waren er geen missende gegevens. ')
 
     st.write(data2.head())
 
-    st.write('We hebben de dataset gekoppieerd waarbij een dataset de datum als een index is en een dataset waarbij de datum een kolom is. Dit hebben we gedaan voor enkele visualisaties die je later in deze blog gaat zien. Na deze aanpassingen hebben we een gemiddelde en een standaard deviatie toegevoegd aan de datasets')
+#     st.write('We hebben de dataset gekoppieerd waarbij een dataset de datum als een index is en een dataset waarbij de datum een kolom is. Dit hebben we gedaan voor enkele visualisaties die je later in deze blog gaat zien. Na deze aanpassingen hebben we een gemiddelde en een standaard deviatie toegevoegd aan de datasets')
 
 
 
@@ -620,9 +620,9 @@ if checkbox:
         st.plotly_chart(fig)
 
     st.write('Deze interactieve lijngrafiek gebruikt alle data van de dataset. Op de verticale as is de temperatuur te lezen en op de horizontale as de tijd. Elke meetpunt kan worden geselecteerd en de periode kan je zelf ook aangeven door te selecteren. Dit is een duidelijke globale weergave van de dataset. Om een nog beter beeld te krijgen van de data hebben we de volgende visualisaties gemaakt:\n'
-             '- Boxplot gemiddelde temperatuur, 1981-2010\n'
-             '- Boxplot standaarddeviatie, 1981-2010\n'
-             '- Gemiddelde temperatuur per maand, 1981 - 2010?\n'
+             '- Boxplot gemiddelde temperatuur\n'
+             '- Boxplot standaarddeviatie\n'
+             '- Gemiddelde temperatuur per maand\n'
              '- Opwarming van Nederland\n'
              '- Extreme waardes')
 
@@ -645,7 +645,7 @@ if checkbox:
 
 
 
-    st.write('We hadden twee kolommen toegevoegd aan de dataset, namelijk de gemiddelde temperatuur van alle weerstations en de standaarddeviatie daarvan. Een boxplot zet al die waardes op een rijtje van klein naar groot en pakt vervolgens de mediaan, het getal wat in het midden ligt. Dat is de verticale groene streep in het midden van de grafiek. De waarde hiervan is 11,1 °C. Vervolgens pakt hij de waardes die op 1/4 en op 3/4 van de getallenreeks staan. In dit geval 6,6 °C en 16 °C. Dit maakt samen de box en 50% van alle waarnemingen liggen hierin. De twee lijnen die uitsteken aan de box bevatten de meeste overige waardes, de onderste en bovenste 25%. Echter, je ziet nog enkele punten aan de linker kant. Dit zijn uitbijters, extreme waarden. De boxplot geeft dus inzicht in de verdeling van de gemiddelde temperatuur.')
+    st.write('We hadden twee kolommen toegevoegd aan de dataset, namelijk de gemiddelde temperatuur van alle weerstations en de standaarddeviatie. Een boxplot zet alle waardes op een rijtje van klein naar groot en pakt vervolgens de mediaan, het getal wat in het midden ligt. De waarde hiervan is 11,1 °C. Vervolgens pakt hij de waardes die op 1/4 en op 3/4 van de getallenreeks staan. In dit geval 6,6 °C en 16 °C. Dit maakt samen de box en 50% van alle waarnemingen liggen hierin. De twee lijnen die uitsteken aan de box bevatten de 25% onderste en bovenste waardes. Echter, je ziet nog enkele punten aan de linker kant, dit zijn uitbijters, extreme waarden. De boxplot geeft dus inzicht in de verdeling van de gemiddelde temperatuur.')
 
     st.header('Boxplot standaarddeviatie')
 
@@ -676,7 +676,7 @@ if checkbox:
     fig = scatter(data_clean)
     st.plotly_chart(fig)
 
-    st.write('Dit spreidingsdiagram is een globale weergave van de temperatuurstijging in Nederland. We hebben de gemiddelde temperatuur berekend van alle maanden, waardoor de trendlijn hier een fractie anders is dan in de volgende grafiek. We hebben dit gedaan ter verduidelijking: een spreidingsdiagram van alle datapunten is namelijk moeilijk te interpreteren door de zigzag die de temperatuur elk jaar maakt als gevolg van de seizoenen. Op deze manier verliezen we weinig aan precisie maar is het beeld veel duidelijker. We hebben de waardes van elke maand een aparte kleur gegeven voor de duidelijkheid en zodat je voor een specifieke maand verschillende jaren met elkaar kunt vergelijken.')
+    st.write('Dit spreidingsdiagram is een globale weergave van de temperatuurstijging in Nederland. De gemiddelde temperatuur is berekend van alle maanden, waardoor de trendlijn hier een fractie anders is dan in de volgende grafiek. We hebben dit gedaan ter verduidelijking: een spreidingsdiagram van alle datapunten is namelijk moeilijk te interpreteren door de zigzag die de temperatuur elk jaar maakt als gevolg van de seizoenen. Op deze manier verliezen we weinig aan precisie maar is het beeld veel duidelijker. We hebben de waardes van elke maand een aparte kleur gegeven voor de duidelijkheid en zodat je voor een specifieke maand verschillende jaren met elkaar kunt vergelijken.')
 
     
     
@@ -689,7 +689,7 @@ if checkbox:
     fig = scatter2(data_clean)
     st.plotly_chart(fig)
 
-    st.write('Deze grafiek is bijna hetzelfde als de grafiek van de gemiddelde temperatuur per maand, alleen is hier ingezoomd op de trendlijn en zijn alle datapunten gebruikt om de trendlijn te berekenen. Vervolgens hebben we de datapunten onzichtbaar gemaakt want hier gaat het echt om de trendlijn. Bij beide grafieken staan formules omschreven, F1 en F2. F1 heeft een stijging van 0.0445872 per jaar. F2 heeft een stijging van 0.0438281 per jaar. Het kleine verschil komt dus doordat bij F1 is gerekend met temperaturen per maand en bij F2 met temperaturen per dag. Dat laatste is uiteraard nauwkeuriger, hoewel het verschil maar klein is.')
+    st.write('Deze grafiek is bijna hetzelfde als de grafiek van de gemiddelde temperatuur per maand, alleen is hier ingezoomd op de trendlijn en zijn alle datapunten gebruikt om de trendlijn te berekenen. Vervolgens hebben we de datapunten onzichtbaar gemaakt want hier gaat het echt om de trendlijn. Bij beide grafieken staan formules omschreven, F1 en F2. F1 heeft een stijging van 0.0445872 per jaar. F2 heeft een stijging van 0.0438281 per jaar. Het kleine verschil komt dus doordat bij F1 is gerekend met temperaturen per maand en bij F2 met temperaturen per dag. De laatste is uiteraard nauwkeuriger, hoewel het verschil maar klein is.')
 
 
 
@@ -706,9 +706,9 @@ if checkbox:
 
 
 
-    st.title('Voorspelling')
+    st.title('Regressie-analyse & voorspelling')
 
-    st.write('Wij gaan een voorspelling uitvoeren wat de temperatuur is in het jaar 2030, 2050 en 2100. We gebruiken voor deze voorspelling formule: F2. We moeten er wel bij zeggen dat deze voorspelling niet volledig correct kan zijn, omdat we te weinig tijd hadden om een goede analyse te maken en omdat we te weinig data hebben.')
+    st.write('Wij gaan een voorspelling uitvoeren wat de temperatuur is in het jaar 2030, 2050 en 2100. We gebruiken voor deze voorspelling formule: F2. We moeten er wel bij zeggen dat deze voorspelling niet volledig correct kan zijn, omdat we te weinig tijd hadden om een goede analyse te maken en omdat er te weinig data is.')
 
 
     st.write('We voorspellen dat de gemiddelde temperatuur voor: \n'
