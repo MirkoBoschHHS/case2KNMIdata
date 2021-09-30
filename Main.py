@@ -572,7 +572,7 @@ if checkbox:
     st.header('Lijndiagram gemiddelde temperatuur in Nederland')
 
     stations = st.multiselect(
-            "Kies meet station", list(data_clean.columns), ["Schiphol NH", "Maastircht LI"]
+            "Kies meet station", list(data_clean.columns), ["Schiphol NH"]
         )
 
 
