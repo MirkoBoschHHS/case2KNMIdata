@@ -504,10 +504,11 @@ if checkbox:
 
     st.title('Inhoudsopgave')
     st.write('  - Inleiding\n'
-             '  - API ophalen van KNMI\n'
-             '  - Data bewerken\n'
-             '  - Visualisatie\n'
-             '  - Voorspelling\n'
+             '  - API ophalen via een API van het KNMI\n'
+             '  - Data schoonmaken & bewerken\n'
+             '  - Visualisaties\n'
+             '  - Regressie-analyse & voorspelling\n'
+             '  - Conclusie\n'
              '  - Literatuurlijst\n'
              '  - Gemaakt door')
 
@@ -568,7 +569,7 @@ if checkbox:
 
 
     st.title('Visualisaties')
-    st.header('Temperatuur in Nederland')
+    st.header('Lijndiagram gemiddelde temperatuur in Nederland')
 
     stations = st.multiselect(
             "Kies meet station", list(data_clean.columns), ["Valkenburg ZH", "Schiphol NH"]
@@ -617,12 +618,12 @@ if checkbox:
         )
         fig.update_xaxes(rangeslider_visible=True)
         fig.update_layout(
-            title_text="Temperatuur over de tijd van alle meetpunten en het gemiddelde"
+            title_text="Lijndiagram gemiddelde temperatuur in Nederland vs. tijd"
         )
 
         fig.update_xaxes(title_text="Tijd in dagen/maanden/jaar (met scrollbar)")
 
-        fig.update_yaxes(title_text="Temperatuur in graden Culsius (°C)",
+        fig.update_yaxes(title_text="Temperatuur in graden Celsius (°C)",
                          secondary_y=False)
         st.plotly_chart(fig)
 
@@ -678,7 +679,7 @@ if checkbox:
 
 
 
-    st.header('Spreidingsdiagram gemiddelde temperatuur per maand met trendlijn')
+    st.header('Spreidingsdiagram per maand met trendlijn')
     st.write("F1: 0.0445872 * Tijd (jaren) + -77.9056")
     fig = scatter(data_clean)
     st.plotly_chart(fig)
