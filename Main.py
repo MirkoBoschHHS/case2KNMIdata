@@ -561,7 +561,7 @@ if checkbox:
 
 
     st.title('Visualisaties')
-    st.header('Temperatuur in Nederland, 1981 - 2010')
+    st.header('Temperatuur in Nederland')
 
     stations = st.multiselect(
             "Kies meet station", list(data_clean.columns), ["Valkenburg ZH", "Schiphol NH"]
@@ -671,25 +671,25 @@ if checkbox:
 
 
 
-    st.header('Gemiddelde temperatuur per maand')
-    st.write("F1: 0.0447443 * Tijd (jaren) + -78.2203")
+    st.header('Spreidingsdiagram gemiddelde temperatuur per maand met trendlijn')
+    st.write("F1: 0.0445872 * Tijd (jaren) + -77.9056")
     fig = scatter(data_clean)
     st.plotly_chart(fig)
 
-    st.write('Deze spreidingsdiagram geeft een globale weergave aan van temperatuurstijging in Nederland. We moeten er meteen bijzeggen dat dit te weinig data hebben waardoor er toevalligheid kan zijn. En we hebben het gemiddelde genomen van elke maand, dus dat veranderd de trendlijn ook een beetje. (Daarvoor hebben we een tweede grafiek gemaakt waar wel alle data is gebruikt en waar de trendline nauwkeuriger is.) We hebben het gemiddelde van elke maand een apparte kleur gegeven zodat je duidelijk kan aflezen wat voornamelijkst de warmste maanden zijn en wat de koudste maanden.')
+    st.write('Dit spreidingsdiagram is een globale weergave van de temperatuurstijging in Nederland. We hebben de gemiddelde temperatuur berekend van alle maanden, waardoor de trendlijn hier een fractie anders is dan in de volgende grafiek. We hebben dit gedaan ter verduidelijking: een spreidingsdiagram van alle datapunten is namelijk moeilijk te interpreteren door de zigzag die de temperatuur elk jaar maakt als gevolg van de seizoenen. Op deze manier verliezen we weinig aan precisie maar is het beeld veel duidelijker. We hebben de waardes van elke maand een aparte kleur gegeven voor de duidelijkheid en zodat je voor een specifieke maand verschillende jaren met elkaar kunt vergelijken.')
 
     
     
     
     
-    st.header('Opwarming van Nederland')
+    st.header('Lijndiagram temperatuurstijging (Opwarming in Nederland)')
 
-    st.write("F2: 0.000120045 * Tijd (dagen) + 10.4651")
+    st.write("F2: 0.0438281 * Tijd (jaren) + -763592")
 
     fig = scatter2(data_clean)
     st.plotly_chart(fig)
 
-    st.write('Deze grafiek is bijna hetzelfde als de gemiddelde temperatuur per maand, alleen is hier ingezoomd om de trendlijn en zijn alle data gebruikt en geen gemiddelde. Bij beide grafieken staan twee formules omschreven, F1 en F2. F1 heeft een stijging van 0.0447443 per jaar. F2 heeft een stijging van 0.0438164 per jaar. Het verschil door het gemiddelde hebben we eruit gehaald, waardoor F2 veel nauwkeuriger is.')
+    st.write('Deze grafiek is bijna hetzelfde als de grafiek van de gemiddelde temperatuur per maand, alleen is hier ingezoomd op de trendlijn en zijn alle datapunten gebruikt om de trendlijn te berekenen. Vervolgens hebben we de datapunten onzichtbaar gemaakt want hier gaat het echt om de trendlijn. Bij beide grafieken staan formules omschreven, F1 en F2. F1 heeft een stijging van 0.0445872 per jaar. F2 heeft een stijging van 0.0438281 per jaar. Het kleine verschil komt dus doordat bij F1 is gerekend met temperaturen per maand en bij F2 met temperaturen per dag. Dat laatste is uiteraard nauwkeuriger, hoewel het verschil maar klein is.')
 
 
 
@@ -702,7 +702,7 @@ if checkbox:
     extreme = koudste_warmste(data_clean)
     st.write(extreme)
 
-    st.write('Hierboven zie je een tabel van de top 10 koudste en warmste dagen van de periode 1981 - 2010. Je moet nagaan dat dit de gemiddelde temperatuur is van de hele dag. Dus er is om de zoveel tijd weer nieuwe meting gedaan en daarvan is het gemiddelde gedaan. Dus dat wil zeggen dat 27,9 °C niet de maximale temperatuur is, maar het gemiddelde. "Juli 2006 warmste maand in zeker 300 jaar" zegt het KNMI. Aan de hand van deze gegevens gaan we een voorspelling doen.')
+    st.write('Hierboven zie je een tabel van de top 10 koudste en warmste dagen van de periode 1981 - 2010. Dit zijn gemiddelde temperaturen over de hele dag. Enkele dingen die ons zijn opgevallen: bij de top 10 koudste dagen zien we drie aaneengesloten dagen: 31 december 1996 en 1 en 2 januari 1997. Op 4 januari 1997 werd de laatste Elfstedentocht gereden. De dagen daarvoor was het dus uitzonderlijk koud. Verder zien we alleen 1985 en 1987 als jaartallen. Ook in 1985 was er een Elfstedentocht. Verder valt op dat de zeer koude dagen qua tijd bijna allemaal dichter bij 1981 liggen dan bij 2010 en dat het bij de zeer warme dagen juist andersom is. Ook hier kun je goed aan zien dat er zeer waarschijnlijk sprake is van opwarming. Verder was juli 2006 volgens het KNMI de warmste maand in zeker 300 jaar.')
 
 
 
